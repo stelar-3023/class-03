@@ -3,20 +3,86 @@
  */
 package maps;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Scanner;
 
 public class Library {
     public boolean someLibraryMethod() {
         return true;
     }
 
-      public static void main(String[] args) {
-     	Library lib = new Library();
-     	System.out.println(lib.someLibraryMethod());
+      public static void main(String[] args) throws IOException {
+          Library lib = new Library();
+          System.out.println(lib.someLibraryMethod());
          useASet();
          useAMap();
+
+         // PD: how many times does "Riggs" show up in the file LethalWeapon.txt
+
+          // Find the file
+          Path lethalWeapon = Paths.get("LethalWeapon.txt");
+          System.out.println(lethalWeapon.toAbsolutePath());
+
+          // Read the file - Scanner
+          Scanner scanner = null;
+          scanner = new Scanner(lethalWeapon);
+
+          String characterName = "Riggs";
+          HashMap<String, Integer> riggsMap = new HashMap<>();
+          riggsMap.put(characterName, 0);
+          String firstLine = scanner.nextLine();
+          while(scanner.hasNextLine()){
+              String line = scanner.nextLine();
+              if(line.contains(characterName)){
+                  int count = riggsMap.get(characterName);
+          // Logic the File -> look for "Riggs" instances and put in a Map
+                  riggsMap.put(characterName, count + 1);
+              }
+          }
+          // return how many times "Riggs" shows up in the file
+          System.out.println("how many times Riggs showed up " + riggsMap.get(characterName)); // cannot return a value from a void method
+     }
+
+     public static void readBufferTryCatch() throws IOException {
+        // find the file, read the file, logic
+         Path lethalWeapon = Paths.get("LethalWeapon.txt");
+         BufferedReader reader = null;
+         try {
+             reader = Files.newBufferedReader(lethalWeapon);
+             String currentLine = reader.readLine();
+             while(currentLine != null){
+                 System.out.println(currentLine);
+                 currentLine = reader.readLine();
+             }
+         } catch (IOException e) {
+             e.printStackTrace();
+         } finally {
+             reader.close();
+         }
+
+     }
+
+     public static void readBufferTryWithResources(){
+         // find the file, read the file, logic
+         Path lethalWeapon = Paths.get("LethalWeapon.txt");
+         try(BufferedReader reader = Files.newBufferedReader(lethalWeapon)){
+             String currentLine = reader.readLine();
+             while(currentLine != null){
+                 System.out.println(currentLine);
+                 currentLine = reader.readLine();
+             }
+         } catch (IOException e) {
+             e.printStackTrace();
+
+         }
+
      }
 
         // 1. Quick Lookups
